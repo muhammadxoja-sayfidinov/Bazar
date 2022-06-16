@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ngn/models/size_config.dart';
 import 'package:provider/provider.dart';
@@ -90,10 +92,10 @@ class _ProductPageState extends State<ProductPage> {
                                         height:
                                             getProportionateScreenHeight(200),
                                         width: getProportionateScreenWidth(150),
-                                        child: Image.network(
-                                          'https://nearbazar.uz/api/${productDate[index].productImage}',
+                                        child: Image.network(productDate[index].productImage,
+
                                           fit: BoxFit.cover,
-                                        ),
+                                        )
                                       ),
                                       Column(
                                         mainAxisAlignment:

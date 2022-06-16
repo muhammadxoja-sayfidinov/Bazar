@@ -15,16 +15,19 @@ class ShopDates with ChangeNotifier {
 
 
 
-  Future<void> addPr(ShopDate shopDate) async {
+  Future<void> addShop(ShopDate shopDate) async {
     final url = Uri.parse(
-        'https://nearbazar.uz/api/bazars');
+        'https://bazar-b2d83-default-rtdb.firebaseio.com/shop.json');
     return http
         .post(url,
         body: jsonEncode({
-          'shop_phone': shopDate.shopPhone,
-          'bazar_id': shopDate.bazarId,
-          'image': shopDate.bazarId,
-          'shopName': shopDate.shopName,
+         'shopName' :shopDate.shopName,
+        'shopPhone' :shopDate.shopPhone,
+       'shopImage':shopDate.shopImage,
+       'bazarId':shopDate.bazarId,
+         'isActive':shopDate.isActive,
+       'createdAt':shopDate.createdAt.toString(),
+        'bazarName':shopDate.bazarName,
         }))
         .then((response) {
       final id = (jsonDecode(response.body) as Map<String, dynamic>)['name'];
@@ -39,37 +42,38 @@ class ShopDates with ChangeNotifier {
           bazarName: shopDate.bazarName);
       _shop_dateList.insert(0, newProduct);
       notifyListeners();
+      print(shopDate.shopName);
     }).catchError((error) {
       print('qo\'shishda xatolik');
       throw error;
     });
+    print(shopDate.shopName);
   }
 
   Future<void> getShops() async  {
     final url = Uri.parse(
-        'https://nearbazar.uz/api/shop');
+        'https://bazar-b2d83-default-rtdb.firebaseio.com/shop.json');
     try {
       final response = await http.get(url);
       if (response.body != null) {
         final date = jsonDecode(response.body) as Map<String, dynamic>;
-        var dates = date['data'] as   List
-        ;
+
         final List<ShopDate> loadedProducts = [];
-        for (Map<String,dynamic> shopDate in dates){
-          print(shopDate);
+        date.forEach((shopID, shopDate) {
           loadedProducts.add(
             ShopDate(
-                shopId: shopDate['shop_id'],
-                shopName: shopDate['shop_name'],
-                shopPhone: shopDate['shop_phone'],
-                shopImage: shopDate['shop_image'],
-                bazarId: shopDate['bazar_id'],
-                isActive: shopDate['is_active'],
-                createdAt: DateTime.parse(shopDate['created_at']),
-                bazarName: shopDate['bazar_name'],
-            )
-          );
-        }
+                shopId: shopID,
+                shopName: shopDate['shopName'],
+                shopPhone: shopDate['shopPhone'].toString(),
+                shopImage: shopDate['shopImage'].toString(),
+                bazarId: shopID,
+                isActive: shopDate['isActive'],
+                createdAt: DateTime.parse(shopDate['createdAt']),
+                bazarName: shopDate['bazarName'],
+            ));
+
+        });
+
         // print(dates.runtimeType);
 
         // date.forEach((productId, bazarData) {

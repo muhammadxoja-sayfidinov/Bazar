@@ -31,11 +31,11 @@ import 'package:flutter/material.dart';
 // }
 
 class Bazar with ChangeNotifier {
-  final String bazarId;
-  final String bazarName;
-  final String bazarImage;
-  final bool isActive;
-  final DateTime createdAt;
+    final String bazarId;
+    final String bazarName;
+     String bazarImage;
+    final bool isActive;
+    final DateTime createdAt;
   Bazar({
     required this.bazarId,
     required this.bazarName,

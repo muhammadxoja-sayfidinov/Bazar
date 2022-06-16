@@ -19,7 +19,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product productDate) async {
     final url = Uri.parse(
-        'https://nearbazar.uz/api/product');
+        'https://bazar-b2d83-default-rtdb.firebaseio.com/product.json');
     return http
         .post(url,
         body: jsonEncode({
@@ -54,7 +54,7 @@ class Products with ChangeNotifier {
 
   Future<void> getProduct() async  {
     final url = Uri.parse(
-       ' https://nearbazar.uz/api/product');
+       'https://bazar-b2d83-default-rtdb.firebaseio.com/product.json');
     try {
       final response = await http.get(url);
       if (response.body != null) {

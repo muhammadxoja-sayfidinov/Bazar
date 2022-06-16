@@ -98,16 +98,15 @@ class _LoginPageState extends State<LoginPage> {
                   top: getProportionateScreenHeight(164)),
               child: ElevatedButton(
                 onPressed: () {
-                  if (usernameController.text.isNotEmpty &&
-                     passwordController.text.isNotEmpty) {
-                    login(usernameController.text, passwordController.text).then((value) => {
+                  // if (usernameController.text==adminName &&
+                  //    passwordController.text==adminPassword) {
                     Navigator.push(
                     context,
                     MaterialPageRoute(
-                    builder: ((context) => AdminPage())))
-                    });
+                    builder: ((context) => AdminPage())));
 
-                  }
+
+                  // }
                 },
                 style: ElevatedButton.styleFrom(
                   primary: const Color(0xff3D56F0),
@@ -137,21 +136,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-Future<void> login(String name, String password) async {
-  print('object');
-  final url = Uri.parse('https://nearbazar.uz/api/auth/login');
-  return http
-      .post(url,
-          body: jsonEncode({
-            'adminName': name,
-            'adminPassword': password,
-          }))
-      .then((response) {
-
-    final id = (jsonDecode(response.body) as Map<String, dynamic>)['name'];
-    print(id);
-  }).catchError((error) {
-    print('qo\'shishda xatolik');
-    throw error;
-  });
-}
+// Future<void> login(String name, String password) async {
+//   print('object');
+//   final url = Uri.parse('https://nearbazar.uz/api/auth/login');
+//   return http
+//       .post(url,
+//           body: jsonEncode({
+//             'adminName': name,
+//             'adminPassword': password,
+//           }))
+//       .then((response) {
+//
+//     final id = (jsonDecode(response.body) as Map<String, dynamic>)['name'];
+//     print(id);
+//   }).catchError((error) {
+//     print('qo\'shishda xatolik');
+//     throw error;
+//   });
+// }

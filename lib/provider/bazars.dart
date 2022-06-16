@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:ngn/models/bazar_data.dart';
 
-
 class Bazars with ChangeNotifier {
   List<Bazar> _list = [];
 
@@ -12,26 +11,25 @@ class Bazars with ChangeNotifier {
     return [..._list];
   }
 
-
-
   Future<void> addProduct(Bazar bazar) async {
     final url = Uri.parse(
-        'https://nearbazar.uz/api/bazars');
+        'https://bazar-b2d83-default-rtdb.firebaseio.com/bazars.json  ');
     return http
         .post(url,
-        body: jsonEncode({
-          'bazarName': bazar.bazarName,
-          'bazarImage': bazar.bazarImage,
-        }))
+            body: jsonEncode({
+              'bazarName': bazar.bazarName,
+              'bazarImage': bazar.bazarImage,
+              'isActive': bazar.isActive,
+              'createdAt': bazar.createdAt.toString(),
+            }))
         .then((response) {
       final id = (jsonDecode(response.body) as Map<String, dynamic>)['name'];
       final newProduct = Bazar(
         bazarId: id,
         bazarImage: bazar.bazarImage,
-        bazarName:bazar.bazarName,
+        bazarName: bazar.bazarName,
         isActive: true,
         createdAt: DateTime.now(),
-
       );
       _list.insert(0, newProduct);
       notifyListeners();
@@ -41,26 +39,24 @@ class Bazars with ChangeNotifier {
     });
   }
 
-  Future<void> getBazars() async  {
-    final url = Uri.parse(
-        'https://nearbazar.uz/api/bazars');
+  Future<void> getBazars() async {
+    final url =
+        Uri.parse('https://bazar-b2d83-default-rtdb.firebaseio.com/bazars.json');
     try {
       final response = await http.get(url);
       if (response.body != null) {
         final date = jsonDecode(response.body) as Map<String, dynamic>;
-        var dates = date['data'] as   List
-        ;
         final List<Bazar> loadedProducts = [];
-        for (Map<String,dynamic> bazarData in dates){
+       date.forEach((bazarID, bazarData) {
           loadedProducts.add(
-                Bazar(
-                    bazarId: bazarData['bazar_id'],
-                    bazarName: bazarData['bazar_name'],
-                    bazarImage: bazarData['bazar_image'],
-                    isActive: bazarData['is_active'],
-                    createdAt: DateTime.parse(bazarData['created_at'])),
-              );
-        }
+            Bazar(
+                bazarId: bazarID,
+                bazarName: bazarData['bazarName'],
+                bazarImage: bazarData['bazarImage'],
+                isActive: bazarData['isActive'],
+                createdAt: DateTime.parse(bazarData['createdAt'])),
+          );});
+
         // print(dates.runtimeType);
 
         // date.forEach((productId, bazarData) {
