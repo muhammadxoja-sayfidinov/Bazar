@@ -200,20 +200,21 @@ class _AdminPageState extends State<AdminPage> {
                                 top: getProportionateScreenHeight(22)),
                             height: getProportionateScreenHeight(57),
                             width: getProportionateScreenWidth(317),
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black26),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: TextField(
+                            child: TextFormField(
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Image url';
+                                }
+                                return null;
+                              },
                               controller: _mainImageUrlsController,
                               decoration: InputDecoration(
-                                  label:
-                                      Text('Mahsulot rasmini urlni kiriting')),
-                              onSubmitted: (value) {
-                                setState(() {
-                                  _mainImageUrlsController =
-                                      value as TextEditingController;
-                                });
-                              },
+                                prefixIcon: Icon(Icons.money),
+                                hintText: "Mahsulot rasm URlni kiriting",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                             ),
                           ),
                           Container(
@@ -269,10 +270,10 @@ class _AdminPageState extends State<AdminPage> {
                       print(shopID);
                       print(shopDate[0].shopName);
                     }
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: ((context) => MyHomePage())));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => MyHomePage())));
                   },
                   icon: Text("Yuborish")),
             )

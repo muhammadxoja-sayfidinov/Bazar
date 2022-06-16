@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ngn/admin/admin_page.dart';
 import 'package:ngn/models/size_config.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -50,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               height: getProportionateScreenHeight(57),
               width: getProportionateScreenWidth(317),
               child: TextFormField(
-                 validator: (value) {
+                validator: (value) {
                   if (value!.isEmpty) {
                     return 'Enter last Name';
                   }
@@ -93,39 +96,37 @@ class _LoginPageState extends State<LoginPage> {
               padding: EdgeInsets.only(
                   left: getProportionateScreenWidth(50),
                   top: getProportionateScreenHeight(164)),
-              child: Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (adminName == usernameController.text &&
-                        adminPassword == passwordController.text) {
-                      setState(() {
-                      
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: ((context) => AdminPage())));
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: const Color(0xff3D56F0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    fixedSize: Size(
-                      271,
-                      58,
-                    ),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (usernameController.text.isNotEmpty &&
+                     passwordController.text.isNotEmpty) {
+                    login(usernameController.text, passwordController.text).then((value) => {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: ((context) => AdminPage())))
+                    });
+
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: const Color(0xff3D56F0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Kirish",
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                  fixedSize: Size(
+                    271,
+                    58,
                   ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Kirish",
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -134,4 +135,23 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+Future<void> login(String name, String password) async {
+  print('object');
+  final url = Uri.parse('https://nearbazar.uz/api/auth/login');
+  return http
+      .post(url,
+          body: jsonEncode({
+            'adminName': name,
+            'adminPassword': password,
+          }))
+      .then((response) {
+
+    final id = (jsonDecode(response.body) as Map<String, dynamic>)['name'];
+    print(id);
+  }).catchError((error) {
+    print('qo\'shishda xatolik');
+    throw error;
+  });
 }

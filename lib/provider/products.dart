@@ -30,6 +30,9 @@ class Products with ChangeNotifier {
         }))
         .then((response) {
       final id = (jsonDecode(response.body) as Map<String, dynamic>)['name'];
+      print(id);
+
+      print(response);
       final newProduct = Product(
           productId: productDate.productId,
           productName: productDate.productName,
@@ -51,7 +54,7 @@ class Products with ChangeNotifier {
 
   Future<void> getProduct() async  {
     final url = Uri.parse(
-        'https://nearbazar.uz/api/product');
+       ' https://nearbazar.uz/api/product');
     try {
       final response = await http.get(url);
       if (response.body != null) {
